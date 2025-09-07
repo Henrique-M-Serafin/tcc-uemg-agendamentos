@@ -2,6 +2,8 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
+import { Avatar, AvatarImage} from "@/components/ui/avatar";
+
 
 interface SidebarItemProps {
   icon: React.ReactNode;
@@ -40,8 +42,13 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
             <SidebarItem key={item.path} {...item} />
         ))}
     </div>
-    <div className="mt-4">
-        
+    <div className="mt-4 flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <Avatar >
+            <AvatarImage className="" src="https://github.com/shadcn.png" />
+          </Avatar>
+          <p className=" font-semibold">Joao da Silva</p>
+        </div>
         <Button variant="outline" className="w-full">
             Sair
         </Button>

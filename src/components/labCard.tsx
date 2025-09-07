@@ -2,6 +2,7 @@ import { Calendar } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
+import DayTimeline from "./DayTimeLine";
 
 type BadgeStatus = "Disponível" | "Reservado";
 
@@ -23,11 +24,7 @@ const LabCard: React.FC<LabCardProps> = ({ title, description, capacity, badge }
         <Badge className={`text-xs ${badge === "Disponível" ? "bg-accent" : "bg-destructive"} font-semibold px-2 py-1`}>{badge}</Badge>
       </CardHeader>
       <CardContent>
-        <div className="flex justify-between items-center">
-            <p className="text-xs text-muted-foreground">7:30</p>
-            <p className="text-xs text-muted-foreground">Timeline do Dia</p>
-            <p className="text-xs text-muted-foreground">22:30</p>
-        </div>
+        <DayTimeline />
         <p className="mb-2">{description}</p>
         <ul className="list-disc list-inside space-y-1">
           <li>Capacidade: {capacity} alunos</li>
