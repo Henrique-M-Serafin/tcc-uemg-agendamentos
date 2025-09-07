@@ -36,6 +36,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ items }) => {
   return (
     <aside className="w-64 bg-background max-h-screen flex flex-col justify-between p-4 shadow-md">
+    <div className="text-xl text-center text-accent font-bold mb-4">Laboratórios UEMG</div>
     <div className="flex-1">
       <h2 className="text-xl font-bold mb-4">Menu</h2>
         {items.map((item) => (
