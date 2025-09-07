@@ -24,7 +24,7 @@ export const WeekDaySelector: React.FC<WeekDaySelectorProps> = ({
   };
 
   return (
-    <>
+    <div className="mb-8">
     <div className="p-4">
       <div className="flex justify-around">
         <div className="flex gap-4 items-center">
@@ -60,6 +60,6 @@ export const WeekDaySelector: React.FC<WeekDaySelectorProps> = ({
         );
       })}
     </div>
-    </>
+    </div>
   );
 };
