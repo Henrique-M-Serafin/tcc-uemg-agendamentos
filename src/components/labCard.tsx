@@ -18,7 +18,7 @@ const LabCard: React.FC<LabCardProps> = ({ title, description, capacity, badge }
 
 
   return (
-    <Card className="bg-background-elevated shadow-md border-none"> 
+    <Card className="bg-background-elevated shadow-lg"> 
       <CardHeader className="flex justify-between items-center">
         <CardTitle className="text-lg font-semibold">{title}</CardTitle>
         <Badge className={`text-xs ${badge === "Disponível" ? "bg-accent" : "bg-destructive"} font-semibold px-2 py-1`}>{badge}</Badge>
