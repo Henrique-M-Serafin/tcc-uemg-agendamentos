@@ -52,6 +52,8 @@ const labs = [
 ] as const;
 
 export function HomePage() {
+    
+
   return (
     <main className="">
         <WeekDaySelector
@@ -65,6 +67,7 @@ export function HomePage() {
                 </div>
             ))}
         </div>
+        
     </main>
   );
 }

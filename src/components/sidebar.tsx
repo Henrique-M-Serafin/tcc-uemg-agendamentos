@@ -1,11 +1,10 @@
 // Sidebar.tsx
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarImage} from "@/components/ui/avatar";
 import { Switch } from "./ui/switch";
 import { useTheme } from "@/context/ThemeProvider";
-
 
 
 interface SidebarItemProps {
@@ -36,8 +35,17 @@ interface SidebarProps {
   items: SidebarItemProps[];
 }
 
+
+ 
 const Sidebar: React.FC<SidebarProps> = ({ items }) => {
   const {theme, toggleTheme} = useTheme();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Implement your logout logic here
+    // For example, clear authentication tokens, update context/state, etc.
+    navigate('/');
+  }
 
   return (
     <aside className="w-64 hidden min-h-screen bg-sidebar max-h-screen md:flex flex-col dark:border-r-1 justify-between p-4 shadow-md">
@@ -59,7 +67,11 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
           </Avatar>
           <p className=" font-semibold">Joao da Silva</p>
         </div>
-        <Button variant="outline" className="w-full">
+        <Button 
+          onClick={() => {
+            handleLogout();
+          }}
+          variant="outline" className="w-full">
             Sair
         </Button>
     </div>

@@ -6,20 +6,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 
-const labs = [
-    { value: 'lab1', label: 'Laboratório 1' },
-    { value: 'lab2', label: 'Laboratório 2' },
-    { value: 'lab3', label: 'Laboratório 3' },
-    { value: 'lab4', label: 'Laboratório 4' },
-    { value: 'lab5', label: 'Laboratório 5' },
-    { value: 'lab6', label: 'Laboratório 6' },
-];
+// const labs = [
+//     { value: 'lab1', label: 'Laboratório 1' },
+//     { value: 'lab2', label: 'Laboratório 2' },
+//     { value: 'lab3', label: 'Laboratório 3' },
+//     { value: 'lab4', label: 'Laboratório 4' },
+//     { value: 'lab5', label: 'Laboratório 5' },
+//     { value: 'lab6', label: 'Laboratório 6' },
+// ];
 
-const vehicles = [
-    { value: 'vehicle1', label: 'Veículo 1' },
-    { value: 'vehicle2', label: 'Veículo 2' },
-    { value: 'vehicle3', label: 'Veículo 3' },
-]
+// const vehicles = [
+//     { value: 'vehicle1', label: 'Veículo 1' },
+//     { value: 'vehicle2', label: 'Veículo 2' },
+//     { value: 'vehicle3', label: 'Veículo 3' },
+// ]
 
 const shifts: Record<string, string[]> = {
   'morning': ["07:00", "07:50", "08:40", "09:30", "09:50", "10:40", "11:30", "12:20"],
@@ -33,7 +33,7 @@ export function AppointmentsPage() {
 
     return (
         <main className="p-4 flex  justify-center h-full">
-            <Card className="max-w-4xl w-full bg-background border-secondary shadow-lg">
+            <Card className="max-w-5xl w-full bg-background border-secondary shadow-lg">
                 <CardHeader>
                     <CardTitle><h1 className="text-center text-primary font-semibold text-2xl">Solicitar Agendamento</h1></CardTitle>
                     <CardDescription className="text-center">Preencha o formulário abaixo para solicitar um agendamento.</CardDescription>
@@ -41,16 +41,16 @@ export function AppointmentsPage() {
                 <CardContent className="h-full">
                     <form className="flex flex-col h-full gap-2">
                         <div className="flex flex-col gap-2">
-                            <Label htmlFor="name">Nome</Label>
+                            <Label htmlFor="name">Nome<span className="text-destructive">*</span></Label>
                             <Input autoComplete="off" id="name" placeholder="Digite seu nome" />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <Label htmlFor="email">E-mail</Label>
+                            <Label htmlFor="email">E-mail<span className="text-destructive">*</span></Label>
                             <Input autoComplete="off" id="email" placeholder="Digite seu e-mail" />
                         </div>
                         <div className="flex flex-col lg:flex-row lg:justify-between w-full gap-2">
                             <div className="flex flex-col gap-2 w-full">
-                                <Label htmlFor="lab">Laboratório ou Veículo</Label>
+                                <Label htmlFor="lab">Laboratório ou Veículo<span className="text-destructive">*</span></Label>
                                 <Select 
                                     value={selectedType}
                                     onValueChange={(value) => setSelectedType(value as 'lab' | 'vehicle')}
@@ -64,27 +64,16 @@ export function AppointmentsPage() {
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <div className=" flex flex-col gap-2 w-full">
-                                <Label htmlFor="lab">Selecione o {selectedType === 'lab' ? 'laboratório' : 'veículo'}</Label>
-                                <Select>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Selecione um laboratório" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {(selectedType === 'lab' ? labs : vehicles).map((item) => (
-                                            <SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
                         </div>
                         <div className="flex flex-col lg:flex-row justify-between gap-2 mb-2">
                             <div className="flex flex-col w-full gap-2">
-                                <Label htmlFor="date">Data</Label>
+                                <Label htmlFor="date">Data<span className="text-destructive">*</span></Label>
                                 <Input type="date" id="date" />
                             </div>
+                            {selectedType === 'lab' &&
+                            <div className="flex items-center w-full gap-2">
                             <div className="flex flex-col w-full gap-2">
-                               <Label htmlFor="turn">Turno</Label>
+                               <Label htmlFor="turn">Turno<span className="text-destructive">*</span></Label>
                                <Select
                                    value={selectedShift}
                                    onValueChange={(value) => setSelectedShift(value as 'morning' | 'afternoon' | 'evening')}
@@ -99,9 +88,10 @@ export function AppointmentsPage() {
                                    </SelectContent>
                                </Select>
                             </div>
+                            
                             <div className="flex items-center gap-2 w-full">
                                 <div className="flex flex-col gap-2 w-full">
-                                <Label htmlFor="time">Horário (Inicio)</Label>
+                                <Label htmlFor="time">Horário (Inicio)<span className=" text-destructive">*</span></Label>
                                 <Select
                                     defaultValue={shifts[selectedShift][0]}
                                     key={selectedShift} // força re-render quando o turno muda
@@ -117,7 +107,7 @@ export function AppointmentsPage() {
                                 </Select>
                                 </div>
                                 <div className="flex flex-col gap-2 w-full">
-                                <Label htmlFor="time">Horário (Fim)</Label>
+                                <Label htmlFor="time">Horário (Fim)<span className="text-destructive">*</span></Label>
                                 <Select
                                     defaultValue={shifts[selectedShift][0]}
                                     key={selectedShift} // força re-render quando o turno muda
@@ -133,9 +123,11 @@ export function AppointmentsPage() {
                                 </Select>
                                 </div>
                             </div>
+                            </div>
+                            }
                         </div>
                         <div className="flex flex-col gap-2 flex-1">
-                            <Label htmlFor="observations">Observações</Label>
+                            <Label htmlFor="observations">Observações (Opcional)</Label>
                             <Textarea className="flex-1 resize-none" id="observations" placeholder="Digite suas observações aqui..." />
                         </div>
                         <Button type="submit" className="w-full mt-auto">Solicitar Agendamento</Button>

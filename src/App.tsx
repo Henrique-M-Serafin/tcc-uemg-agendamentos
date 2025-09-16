@@ -5,36 +5,51 @@ import { Layout } from '@/components/layout'
 import { HomePage } from './pages/HomePage'
 import { AppointmentsPage } from './pages/Appointments'
 import { VehiclesPage } from './pages/Vehicles'
+import { LoginPage } from './pages/LoginPage'
 
-function PublicRoute({ children }: { children: React.ReactNode }) {
+function PrivateRoute({ children }: { children: React.ReactNode }) {
+  // Implement your authentication logic here  
+  
   return <Layout>{children}</Layout>
+
 }
 
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  return <div className="">{children}</div>
+}
 
 function App() {
   return (
     <Router>
       <div className="min-h-screen bg-background">
       <Routes>
-        <Route path="/" 
+        <Route
+          path="/"
           element={
             <PublicRoute>
-              <HomePage />
+              <LoginPage />
             </PublicRoute>
+          }
+        />
+        <Route path="/dashboard" 
+          element={
+            <PrivateRoute>
+              <HomePage />
+            </PrivateRoute>
           } 
         />
         <Route path='/agendamentos'
           element={
-            <PublicRoute>
+            <PrivateRoute>
               <AppointmentsPage />
-            </PublicRoute>
+            </PrivateRoute>
           }
         />
         <Route path='/veiculos'
           element={
-            <PublicRoute>
+            <PrivateRoute>
               <VehiclesPage />
-            </PublicRoute>
+            </PrivateRoute>
           }
         />
 

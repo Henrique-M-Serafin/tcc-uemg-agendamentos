@@ -1,6 +1,6 @@
 // Navbar.tsx
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarImage} from "@/components/ui/avatar";
 import { Switch } from "./ui/switch";
@@ -36,6 +36,14 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ items }) => {
   const {theme, toggleTheme} = useTheme();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Implement your logout logic here
+    // For example, clear authentication tokens, update context/state, etc.
+    navigate('/')
+  }
+
 
   return (
     <nav className="w-full max-w-screen md:hidden bg-sidebar border-b border-sidebar-border shadow-sm">
@@ -58,7 +66,9 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
               </Avatar>
             </div>
             
-            <Button variant="outline" size="sm">
+            <Button 
+              onClick={handleLogout}
+              variant="outline" size="sm">
               Sair
             </Button>
           </div>

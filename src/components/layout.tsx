@@ -1,4 +1,4 @@
-import { Bus, CalendarDays, House } from "lucide-react";
+import { CalendarDays, House } from "lucide-react";
 import Sidebar from "./sidebar";
 import Navbar from "./Navbar";
 
@@ -6,18 +6,18 @@ interface LayoutProps {
   children: React.ReactNode
 }
 
-const sidebarItems = [
-  { icon: <House/>, label: "Dashboard", path: "/" },
-  { icon: <Bus/>, label: "Veículos", path: "/veiculos" },
+const Items = [
+  { icon: <House/>, label: "Dashboard", path: "/dashboard" },
+  // { icon: <Bus/>, label: "Veículos", path: "/veiculos" },
   { icon: <CalendarDays/>, label: "Agendamentos", path: "/agendamentos" },
 ];
 
 export function Layout({ children }: LayoutProps) {
     return (
     <div className="min-h-screen bg-background flex flex-col">
-        <Navbar items={sidebarItems} />
+        <Navbar items={Items} />
          <div className="flex flex-1">
-            <Sidebar items={sidebarItems} />
+            <Sidebar items={Items} />
         <main className="flex-1 p-6">
                 {children}
         </main>

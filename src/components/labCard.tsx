@@ -3,6 +3,11 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import DayTimeline from "./DayTimeLine";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogDescription } from "./ui/dialog";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import {slots} from "@/types";
+import { ScrollArea } from "./ui/scroll-area";
 
 type BadgeStatus = "Disponível" | "Reservado";
 
@@ -15,9 +20,28 @@ interface LabCardProps {
 
 const LabCard: React.FC<LabCardProps> = ({ title, description, capacity, badge }) => {
 
+  const [dialogOpen, setDialogOpen] = useState(false);
 
 
   return (
+    <>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <DialogContent>
+        <DialogTitle className="text-lg font-semibold">Detalhes do {title}</DialogTitle>
+        <DialogDescription>{capacity} alunos</DialogDescription>
+        <ScrollArea className="max-h-[60vh] ">
+          {slots.map((slot, index) => (
+
+              <Card key={index} className="mb-2 mx-4 border-secondary bg-background-elevated shadow-md">
+                <CardContent>
+                  <CardTitle>{slot}</CardTitle>
+                </CardContent>
+              </Card>
+            
+          ))}
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
     <Card className="bg-background-elevated shadow-lg"> 
       <CardHeader className="flex justify-between items-center">
         <CardTitle className="text-lg font-semibold">{title}</CardTitle>
@@ -31,12 +55,15 @@ const LabCard: React.FC<LabCardProps> = ({ title, description, capacity, badge }
         </ul>
       </CardContent>
       <CardFooter>
-        <Button variant="outline" className="w-full">
+        <Button
+            onClick={() => setDialogOpen(true)}
+            variant="outline" className="w-full">
             <Calendar className="mr-2" />
             Ver Agenda Completa
         </Button>
       </CardFooter>
     </Card>
+    </>
   );
 };
 
