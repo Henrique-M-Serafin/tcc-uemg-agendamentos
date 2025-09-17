@@ -71,7 +71,7 @@ export function AppointmentsPage() {
                                 <Input type="date" id="date" />
                             </div>
                             {selectedType === 'lab' &&
-                            <div className="flex items-center w-full gap-2">
+                            <div className="flex lg:flex-row flex-col items-center w-full gap-2">
                             <div className="flex flex-col w-full gap-2">
                                <Label htmlFor="turn">Turno<span className="text-destructive">*</span></Label>
                                <Select

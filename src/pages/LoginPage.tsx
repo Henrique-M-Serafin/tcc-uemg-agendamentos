@@ -17,10 +17,10 @@ export function LoginPage() {
 
     return (
         <main className="flex max-w-screen w-screen h-screen ">
-            <div className="w-[40%] bg-primary"></div>
-            <div className="w-[60%] flex flex-col justify-center items-center gap-2">
+            <div className="w-[40%] hidden lg:flex bg-primary"></div>
+            <div className="w-screen lg:w-[60%] flex flex-col justify-center items-center gap-2">
                 <h1 className="text-xl font-semibold">Agendamentos UEMG</h1>
-                <Card className="bg-background shadow-lg border-secondary w-[400px]">
+                <Card className="bg-background shadow-lg border-secondary">
                     <CardHeader className="flex flex-col justify-center items-center gap-2">
                         <CardTitle>Realize seu login</CardTitle>
                         <form onSubmit={handleLogin} className={`${loginType === 'admin' ? 'flex' : 'hidden'} w-full gap-3 flex-col`}>
@@ -39,7 +39,7 @@ export function LoginPage() {
                     </CardHeader>   
                     <CardFooter className="flex w-full">
                         {loginType === null && 
-                        <div className="flex w-full justify-between">
+                        <div className="flex gap-2 w-full justify-between">
                             <Button variant={"outline"} onClick={() => setLoginType('admin')}>Login como Admin</Button>
                             <Button variant={'default'} onClick={() => navigate('/dashboard')}>Login como Visitante</Button>
                         </div>
