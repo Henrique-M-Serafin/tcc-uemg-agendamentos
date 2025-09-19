@@ -135,6 +135,7 @@ export function AppointmentsPage() {
                     </form>
                 </CardContent>
             </Card>
+            
         </main>
     )
 }

@@ -16,3 +16,23 @@ export type Appointments = {
     end_hour_id?: number;
 }
 
+export type AppointmentWithRelations = {
+  id: string; // virou UUID na sua tabela
+  date: string; // formato ISO (YYYY-MM-DD)
+  sponsor: string;
+  created_at: string; // timestamp
+  resource_id: number;
+  resource_name: string;
+  resource_type: string;
+  start_hour_id: number | null;
+  start_time: string | null; // "HH:MM:SS"
+  end_hour_id: number | null;
+  end_time: string | null;   // "HH:MM:SS"
+};
+
+export type Resource = {
+  id: string;
+  name: string;
+  type: string;
+  capacity?: number; 
+};
