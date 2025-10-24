@@ -81,6 +81,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
               Criar Agendamento
             </Button>
           )}
+          
       </div>
       <div className="mt-4 flex flex-col gap-2">
           <div className="flex items-center gap-2">

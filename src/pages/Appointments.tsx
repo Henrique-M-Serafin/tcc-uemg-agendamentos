@@ -1,3 +1,4 @@
+import { sendEmail } from "@/api/sendEmail";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -30,6 +31,41 @@ const shifts: Record<string, string[]> = {
 export function AppointmentsPage() {
     const [selectedType, setSelectedType] = useState<'lab' | 'vehicle'>('lab');
     const [selectedShift, setSelectedShift] = useState<'morning' | 'afternoon' | 'evening'>('morning');
+    const [formData, setFormData] = useState({
+        name: '',
+        from: '',
+        date: '',
+        start_hour: '',
+        end_hour: '',
+        description: '',
+    });
+
+    async function handleSendEmail(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+
+  try {
+    // Exemplo: envia a requisição e aguarda resposta
+    const response = await sendEmail({
+        name: formData.name,
+        from: formData.from,
+        description: formData.description || "Sem descrição.",
+        date: formData.date,
+        start_hour: formData.start_hour,
+        end_hour: formData.end_hour,
+        });
+
+        if (response.success) {
+        alert("Solicitação enviada com sucesso!");
+        } else {
+        alert("Erro ao enviar solicitação: " + (response.error || "Desconhecido"));
+        }
+    
+    } catch (err) {
+        console.error("Erro ao enviar:", err);
+        alert("Falha ao enviar o e-mail.");
+    }
+    }
+
 
     return (
         <main className="p-4 flex  justify-center h-full">
@@ -39,14 +75,20 @@ export function AppointmentsPage() {
                     <CardDescription className="text-center">Preencha o formulário abaixo para solicitar um agendamento.</CardDescription>
                 </CardHeader>
                 <CardContent className="h-full">
-                    <form className="flex flex-col h-full gap-2">
+                    <form onSubmit={handleSendEmail} className="flex flex-col h-full gap-2">
                         <div className="flex flex-col gap-2">
                             <Label htmlFor="name">Nome<span className="text-destructive">*</span></Label>
-                            <Input autoComplete="off" id="name" placeholder="Digite seu nome" />
+                            <Input
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                autoComplete="off" id="name" placeholder="Digite seu nome" />
                         </div>
                         <div className="flex flex-col gap-2">
                             <Label htmlFor="email">E-mail<span className="text-destructive">*</span></Label>
-                            <Input autoComplete="off" id="email" placeholder="Digite seu e-mail" />
+                            <Input
+                                value={formData.from}
+                                onChange={(e) => setFormData({ ...formData, from: e.target.value })}
+                                autoComplete="off" id="email" placeholder="Digite seu e-mail" />
                         </div>
                         <div className="flex flex-col lg:flex-row lg:justify-between w-full gap-2">
                             <div className="flex flex-col gap-2 w-full">
@@ -68,7 +110,12 @@ export function AppointmentsPage() {
                         <div className="flex flex-col lg:flex-row justify-between gap-2 mb-2">
                             <div className="flex flex-col w-full gap-2">
                                 <Label htmlFor="date">Data<span className="text-destructive">*</span></Label>
-                                <Input type="date" id="date" />
+                                <Input
+                                    type="date"
+                                    id="date"
+                                    value={formData.date}
+                                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                                />
                             </div>
                             {selectedType === 'lab' &&
                             <div className="flex lg:flex-row flex-col items-center w-full gap-2">
@@ -93,6 +140,8 @@ export function AppointmentsPage() {
                                 <div className="flex flex-col gap-2 w-full">
                                 <Label htmlFor="time">Horário (Inicio)<span className=" text-destructive">*</span></Label>
                                 <Select
+                                    value={formData.start_hour}
+                                    onValueChange={(value) => setFormData({ ...formData, start_hour: value })}
                                     defaultValue={shifts[selectedShift][0]}
                                     key={selectedShift} // força re-render quando o turno muda
                                 >
@@ -109,6 +158,8 @@ export function AppointmentsPage() {
                                 <div className="flex flex-col gap-2 w-full">
                                 <Label htmlFor="time">Horário (Fim)<span className="text-destructive">*</span></Label>
                                 <Select
+                                    value={formData.end_hour}
+                                    onValueChange={(value) => setFormData({ ...formData, end_hour: value })}
                                     defaultValue={shifts[selectedShift][0]}
                                     key={selectedShift} // força re-render quando o turno muda
                                 >
@@ -127,10 +178,18 @@ export function AppointmentsPage() {
                             }
                         </div>
                         <div className="flex flex-col gap-2 flex-1">
-                            <Label htmlFor="observations">Observações (Opcional)</Label>
-                            <Textarea className="flex-1 resize-none" id="observations" placeholder="Digite suas observações aqui..." />
+                            <Label htmlFor="description">Descrição (Opcional)</Label>
+                            <Textarea
+                                value={formData.description}
+                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                className="flex-1 resize-none" id="description" placeholder="Digite suas observações aqui..." 
+                                />
                         </div>
-                        <Button type="submit" className="w-full mt-auto">Solicitar Agendamento</Button>
+                        <Button 
+                            type="submit" className="w-full mt-auto"
+                        >
+                            Solicitar Agendamento
+                        </Button>
                         
                     </form>
                 </CardContent>

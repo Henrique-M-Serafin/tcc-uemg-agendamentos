@@ -18,7 +18,7 @@ export function useAppointments() {
         console.error("Erro ao buscar reservas:", error);
       } else {
         setAppointments(data as AppointmentWithRelations[]);
-        console.log("Agendamentos buscados:", data);
+        
       }
       setLoading(false);
     }
