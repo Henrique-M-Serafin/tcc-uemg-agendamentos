@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogFooter, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/api/supabaseClient";
 import { Button } from "./ui/button";
+import { createAppointment } from "@/api/createAppointment";
 
 interface Hour {
   id: number;
@@ -87,35 +88,34 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
     return true;
   });
 
-  const handleSubmit = async () => {
-    // Validação simples
-    if (!formData.resource || !formData.start_hour || !formData.end_hour || !formData.date || !formData.sponsor) {
-      alert("Por favor, preencha todos os campos.");
-      return;
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+  try { 
+    const response = await createAppointment({
+      sponsor: formData.sponsor,
+      resources_id: Number(formData.resource),
+      start_hour_id: Number(formData.start_hour),
+      end_hour_id: Number(formData.end_hour),
+      date: formData.date
+      });
+
+    if (response.success) {
+      alert("Agendamento criado com sucesso!");
+    } else {
+      alert(response.error || "Erro ao criar agendamento");
     }
-    const { data, error } = await supabase.from("Appointments").insert([
-        {
-          resource: formData.resource,
-          start_hour: formData.start_hour,
-          end_hour: formData.end_hour,
-          date: formData.date,
-          sponsor: formData.sponsor,
-        },
-      ]);
-      if (error) {
-        console.error("Erro ao criar agendamento:", error);
-      } else {
-        alert("Agendamento criado com sucesso!");
-        setDialogOpen(false);
-      }
-    };
+  } catch (err) {
+    alert("Falha ao enviar requisição");
+  }
+}
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogContent className="max-w-lg">
         <DialogTitle>Criar Agendamento</DialogTitle>
-
-        <form className="grid gap-4 py-4">
+        <DialogDescription>Preencha os dados abaixo para criar um novo agendamento.</DialogDescription>
+        <form onSubmit={handleSubmit} className="grid gap-4 py-4">
           {/* Laboratório */}
           <div className="flex flex-col gap-2">
             <Label>Laboratório</Label>
@@ -131,7 +131,7 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
                 <SelectContent>
                   {filteredResources.length > 0 ? (
                     filteredResources.map((resource) => (
-                      <SelectItem key={resource.id} value={resource.name}>
+                      <SelectItem key={resource.id} value={resource.id.toString()}>
                         {resource.name}
                       </SelectItem>
                     ))
@@ -179,7 +179,7 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
                 <SelectContent>
                   {filteredHours.length > 0 ? (
                     filteredHours.map((hour) => (
-                      <SelectItem key={hour.id} value={hour.time}>
+                      <SelectItem key={hour.id} value={hour.id.toString()}>
                         {hour.time}
                       </SelectItem>
                     ))
@@ -206,7 +206,7 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
                 <SelectContent>
                   {filteredHours.length > 0 ? (
                     filteredHours.map((hour) => (
-                      <SelectItem key={hour.id} value={hour.time}>
+                      <SelectItem key={hour.id} value={hour.id.toString()}>
                         {hour.time}
                       </SelectItem>
                     ))
@@ -246,11 +246,10 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
                 placeholder="Nome do solicitante"
                 />
             </div>
+            <Button type="submit">Criar Agendamento</Button>
         </form>
-        <DialogFooter>
-            <Button onClick={handleSubmit}>Criar Agendamento</Button>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button>
-        </DialogFooter>
+                
       </DialogContent>
       
     </Dialog>
