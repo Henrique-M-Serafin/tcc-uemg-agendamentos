@@ -2,6 +2,8 @@ import { CalendarDays, House } from "lucide-react";
 import Sidebar from "./sidebar";
 import Navbar from "./Navbar";
 import { AppointmentsProvider } from "@/context/AppointmentsContext";
+import { Toaster } from "@/components/ui/sonner";
+
 
 interface LayoutProps {
   children: React.ReactNode
@@ -23,6 +25,7 @@ export function Layout({ children }: LayoutProps) {
           <main className="flex-1 p-6">
             {children}
           </main>
+          <Toaster />
         </div>
       </div>
     </AppointmentsProvider>

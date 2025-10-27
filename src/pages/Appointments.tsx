@@ -56,6 +56,15 @@ export function AppointmentsPage() {
 
         if (response.success) {
         alert("Solicitação enviada com sucesso!");
+        setFormData({
+            name: '',
+            from: '',
+            date: '',
+            start_hour: '',
+            end_hour: '',
+            description: '',
+        });
+        
         } else {
         alert("Erro ao enviar solicitação: " + (response.error || "Desconhecido"));
         }

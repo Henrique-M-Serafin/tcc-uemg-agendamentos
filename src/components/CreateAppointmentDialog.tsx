@@ -14,6 +14,7 @@ import { Button } from "./ui/button";
 import { createAppointment } from "@/api/createAppointment";
 import { useAppointmentsContext } from "@/context/AppointmentsContext";
 import { Checkbox } from "./ui/checkbox";
+import { toast } from "sonner";
 
 interface Hour {
   id: number;
@@ -95,17 +96,17 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
       });
 
       if (!response.success) {
-        alert(`Erro ao criar agendamento em ${date}: ${response.error}`);
+        toast.error(`Erro ao criar agendamento em ${date}: ${response.error}`);
         return;
       }
     }
 
-    alert("Agendamentos criados com sucesso!");
+    toast.success("Agendamento(s) criado(s) com sucesso!");
     setDialogOpen(false);
     refresh(); // atualiza a home page
 
   } catch (err) {
-    alert("Falha ao criar agendamento");
+    toast.error("Falha ao criar agendamento");
     console.error(err);
   }
 }
