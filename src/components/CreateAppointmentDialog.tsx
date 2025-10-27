@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,6 +12,8 @@ import {
 import { supabase } from "@/api/supabaseClient";
 import { Button } from "./ui/button";
 import { createAppointment } from "@/api/createAppointment";
+import { useAppointmentsContext } from "@/context/AppointmentsContext";
+import { Checkbox } from "./ui/checkbox";
 
 interface Hour {
   id: number;
@@ -37,6 +39,7 @@ interface CreateAppointmentDialogProps {
   dialogOpen: boolean;
   setDialogOpen: (open: boolean) => void;
   shifts: string; // "Morning" | "Afternoon" | "Night"
+  onSuccess?: () => void;
 }
 
 export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = ({
@@ -44,6 +47,7 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
   setDialogOpen,
   shifts,
 }) => {
+  const { refresh } = useAppointmentsContext(); // 🔹 pega o refresh do contexto
   const [hours, setHours] = useState<Hour[]>([]);
   const [resources, setResources] = useState<Resources[]>([]);
   const [selectedShift, setSelectedShift] = useState(shifts);
@@ -54,6 +58,57 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
     date: "",
     sponsor: "",
   });
+  const [isRecurring, setIsRecurring] = useState(false);
+
+  // ...fetchHours e fetchLabs continuam iguais
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+
+  try {
+    // Converte a data inicial selecionada em objeto Date
+    const startDate = new Date(formData.date);
+    
+    // Cria array de datas a serem agendadas
+    const datesToCreate: string[] = [];
+
+    if (isRecurring) {
+      // Gera 8 semanas (2 meses) de agendamentos
+      for (let i = 0; i < 8; i++) {
+        const newDate = new Date(startDate);
+        newDate.setDate(startDate.getDate() + i * 7); // adiciona 7 dias a cada iteração
+        datesToCreate.push(newDate.toISOString().slice(0, 10));
+      }
+    } else {
+      // Apenas a data selecionada
+      datesToCreate.push(formData.date);
+    }
+
+    // Envia cada agendamento ao backend
+    for (const date of datesToCreate) {
+      const response = await createAppointment({
+        sponsor: formData.sponsor,
+        resources_id: Number(formData.resource),
+        start_hour_id: Number(formData.start_hour),
+        end_hour_id: Number(formData.end_hour),
+        date: date,
+      });
+
+      if (!response.success) {
+        alert(`Erro ao criar agendamento em ${date}: ${response.error}`);
+        return;
+      }
+    }
+
+    alert("Agendamentos criados com sucesso!");
+    setDialogOpen(false);
+    refresh(); // atualiza a home page
+
+  } catch (err) {
+    alert("Falha ao criar agendamento");
+    console.error(err);
+  }
+}
 
   useEffect(() => {
     const fetchHours = async () => {
@@ -88,27 +143,6 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
     return true;
   });
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-  try { 
-    const response = await createAppointment({
-      sponsor: formData.sponsor,
-      resources_id: Number(formData.resource),
-      start_hour_id: Number(formData.start_hour),
-      end_hour_id: Number(formData.end_hour),
-      date: formData.date
-      });
-
-    if (response.success) {
-      alert("Agendamento criado com sucesso!");
-    } else {
-      alert(response.error || "Erro ao criar agendamento");
-    }
-  } catch (err) {
-    alert("Falha ao enviar requisição");
-  }
-}
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -221,6 +255,7 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
           </div>
 
           {/* Data */}
+          
           <div className="flex flex-col gap-2">
             <Label htmlFor="date">Data</Label>
             <Input
@@ -231,6 +266,15 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
                 setFormData({ ...formData, date: e.target.value })
               }
             />
+            <div className="flex gap-2 mt-2"> 
+              <Label htmlFor="recurrence">Recorrente?</Label>
+              <Checkbox 
+                checked={isRecurring}
+                onCheckedChange={(checked) => {
+                setIsRecurring(!!checked); 
+                console.log("Recorrente agora:", !!checked);
+              }} className="border-primary"></Checkbox>
+            </div>
           </div>
             {/* Solicitante */}
             <div className="flex flex-col gap-2">

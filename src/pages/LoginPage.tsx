@@ -44,7 +44,7 @@ export function LoginPage() {
     <main className="flex max-w-screen w-screen h-screen ">
       <div className="w-[40%] hidden lg:flex bg-primary"></div>
       <div className="w-screen lg:w-[60%] flex flex-col justify-center items-center gap-2">
-        <h1 className="text-xl font-semibold">Agendamentos UEMG</h1>
+        <h1 className="text-xl font-semibold">Terminal Universitário de Calendário - UEMG</h1>
         <Card className="w-md bg-background shadow-lg border-secondary">
           <CardHeader className="flex flex-col justify-center items-center gap-2">
             <CardTitle>Realize seu login</CardTitle>

@@ -31,53 +31,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [type, setType] = useState<UserType | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
 
-  useEffect(() => {
-    let mounted = true;
+useEffect(() => {
+  const init = async () => {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) {
+      console.error("Erro ao obter sessão:", error);
+    } else {
+      setSession(data.session ?? null);
+      setUser(data.session?.user ?? null);
 
-    const init = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      if (!mounted) return;
-
-      if (error) {
-        console.error("Erro ao obter sessão:", error);
-        setUser(null);
-        setSession(null);
-        setType(null);
-        setProfile(null);
-      } else {
-        const session = data.session;
-        setUser(session?.user ?? null);
-        setSession(session ?? null);
-
-        if (session?.user) {
-          await fetchUserProfile(session.user.id);
-        }
+      if (data.session?.user) {
+        await fetchUserProfile(data.session.user.id);
       }
-      setLoading(false);
-    };
+    }
+    setLoading(false);
+  };
 
-    init();
+  init();
 
-    // Escuta mudanças na auth (login/logout/refresh)
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
-      setUser(newSession?.user ?? null);
-      setSession(newSession ?? null);
+  const { data: listener } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    setSession(newSession);
+    setUser(newSession?.user ?? null);
 
-      if (newSession?.user) {
-        await fetchUserProfile(newSession.user.id);
-      } else {
-        setType(null);
-        setProfile(null);
-      }
-    });
+    if (newSession?.user) {
+      fetchUserProfile(newSession.user.id);
+    } else {
+      setType(null);
+      setProfile(null);
+    }
+  });
 
-    return () => {
-      mounted = false;
-      subscription.unsubscribe();
-    };
-  }, []);
+  return () => {
+    listener.subscription.unsubscribe();
+  };
+}, []);
 
   // Busca perfil completo na tabela Users
   const fetchUserProfile = async (userId: string) => {
@@ -136,7 +123,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut: AuthContextValue["signOut"] = async () => {
     await supabase.auth.signOut();
-    localStorage.clear();
     setType(null);
     setProfile(null);
   };
