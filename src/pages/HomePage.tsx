@@ -55,12 +55,34 @@ export function HomePage() {
     })
   );
 
-  // Enriquecer os labs
-  const labsWithAppointments = resources.map((lab) => ({
-    ...lab,
-    appointments: appointmentsByResource[lab.name?.trim()] || [],
-    badge: (appointmentsByResource[lab.name]?.length ?? 0) > 0 ? "Reservado" : "Disponível",
-  }));
+    // Enriquecer os labs
+    const labsOnly = resources
+      .filter((lab) => lab.type === "Lab")
+      .sort((a, b) => a.name.localeCompare(b.name)); 
+
+    const labsWithAppointments = labsOnly.map((lab) => ({
+      ...lab,
+      appointments: appointmentsByResource[lab.name?.trim()] || [],
+      badge:
+        (appointmentsByResource[lab.name?.trim()]?.length ?? 0) > 0
+          ? "Reservado"
+          : "Disponível",
+    }));
+
+    // Enriquecer os auditórios
+    const audOnly = resources
+      .filter((r) => r.type === "Aud")
+      .sort((a, b) => a.name.localeCompare(b.name)); 
+
+    const audWithAppointments = audOnly.map((aud) => ({
+      ...aud,
+      appointments: appointmentsByResource[aud.name?.trim()] || [],
+      badge:
+        (appointmentsByResource[aud.name?.trim()]?.length ?? 0) > 0
+          ? "Reservado"
+          : "Disponível",
+    }));
+
 
   function dayToIndex(day: string): number {
     switch (day) {
@@ -94,7 +116,10 @@ export function HomePage() {
           setSelectedDate(newDate.toISOString().slice(0, 10));
         }}
       />
-
+      <div className="my-4 flex flex-col gap-2">
+        <h2 className="text-lg font-bold">Laboratórios</h2>
+        <hr className="border-1 " />
+      </div>
       {(loading || loadingResources) ? (
         <p>Carregando laboratórios...</p>
       ) : (
@@ -106,6 +131,25 @@ export function HomePage() {
               capacity={lab.capacity}
               badge={(appointmentsByResource[lab.name]?.length ?? 0) > 0 ? "Reservado" : "Disponível"}
               appointments={lab.appointments}
+            />
+          ))}
+        </div>
+      )}
+      <div className="my-4 flex flex-col gap-2">
+        <h2 className="text-lg font-bold">Auditórios</h2>
+        <hr className="border-1" />
+      </div>
+      {(loading || loadingResources) ? (
+        <p>Carregando auditórios...</p>
+      ) : (
+        <div className="grid grid-cols-3 gap-4">
+          {audWithAppointments.map((aud) => (
+            <LabCard
+              key={aud.id}
+              title={aud.name}
+              capacity={aud.capacity}
+              badge={(appointmentsByResource[aud.name]?.length ?? 0) > 0 ? "Reservado" : "Disponível"}
+              appointments={aud.appointments}
             />
           ))}
         </div>

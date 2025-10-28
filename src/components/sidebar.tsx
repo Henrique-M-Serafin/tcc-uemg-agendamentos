@@ -59,7 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
   return (
     <>
 
-      <aside className="w-64 hidden min-h-screen bg-sidebar max-h-screen md:flex flex-col dark:border-r-1 justify-between p-4 shadow-md">
+      <aside className="w-64 hidden md:flex flex-col justify-between p-4 shadow-md bg-sidebar dark:border-r-1 fixed top-0 left-0 h-screen">
       <div className="text-xl text-center text-accent font-bold mb-4">Laboratórios UEMG</div>
       <div className="flex-1">
         <div className="flex justify-between items-center mb-4">
@@ -111,6 +111,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
           dialogOpen={dialogOpen}
           setDialogOpen={setDialogOpen}
           shifts={shifts}
+          
         />
       )}
     </>

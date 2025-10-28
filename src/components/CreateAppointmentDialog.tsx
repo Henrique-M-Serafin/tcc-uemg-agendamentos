@@ -21,11 +21,11 @@ interface Hour {
   time: string;
 }
 
-interface Resources {
-    id: number;
-    name: string;
-    type: string;
-    capacity?: number;
+interface Resource {
+  id: number;
+  name: string;
+  type: string;
+  capacity?: number;
 }
 
 interface FormData {
@@ -48,10 +48,13 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
   setDialogOpen,
   shifts,
 }) => {
-  const { refresh } = useAppointmentsContext(); // 🔹 pega o refresh do contexto
+  const { refresh } = useAppointmentsContext();
   const [hours, setHours] = useState<Hour[]>([]);
-  const [resources, setResources] = useState<Resources[]>([]);
+  const [resources, setResources] = useState<Resource[]>([]);
   const [selectedShift, setSelectedShift] = useState(shifts);
+  const [resourceType, setResourceType] = useState<"Lab" | "Aud">("Lab");
+  const [isRecurring, setIsRecurring] = useState(false);
+
   const [formData, setFormData] = useState<FormData>({
     resource: "",
     start_hour: "",
@@ -59,82 +62,76 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
     date: "",
     sponsor: "",
   });
-  const [isRecurring, setIsRecurring] = useState(false);
-
-  // ...fetchHours e fetchLabs continuam iguais
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    // Converte a data inicial selecionada em objeto Date
-    const startDate = new Date(formData.date);
-    
-    // Cria array de datas a serem agendadas
-    const datesToCreate: string[] = [];
+    try {
+      const startDate = new Date(formData.date);
+      const datesToCreate: string[] = [];
 
-    if (isRecurring) {
-      // Gera 8 semanas (2 meses) de agendamentos
-      for (let i = 0; i < 8; i++) {
-        const newDate = new Date(startDate);
-        newDate.setDate(startDate.getDate() + i * 7); // adiciona 7 dias a cada iteração
-        datesToCreate.push(newDate.toISOString().slice(0, 10));
+      if (isRecurring) {
+        // Gera 8 semanas (2 meses)
+        for (let i = 0; i < 8; i++) {
+          const newDate = new Date(startDate);
+          newDate.setDate(startDate.getDate() + i * 7);
+          datesToCreate.push(newDate.toISOString().slice(0, 10));
+        }
+      } else {
+        datesToCreate.push(formData.date);
       }
-    } else {
-      // Apenas a data selecionada
-      datesToCreate.push(formData.date);
-    }
 
-    // Envia cada agendamento ao backend
-    for (const date of datesToCreate) {
-      const response = await createAppointment({
-        sponsor: formData.sponsor,
-        resources_id: Number(formData.resource),
-        start_hour_id: Number(formData.start_hour),
-        end_hour_id: Number(formData.end_hour),
-        date: date,
+      for (const date of datesToCreate) {
+        const response = await createAppointment({
+          sponsor: formData.sponsor,
+          resources_id: Number(formData.resource),
+          start_hour_id: Number(formData.start_hour),
+          end_hour_id: Number(formData.end_hour),
+          date,
+        });
+
+        if (!response.success) {
+          toast.error(`Erro ao criar agendamento em ${date}: ${response.error}`);
+          return;
+        }
+      }
+
+      toast.success("Agendamento(s) criado(s) com sucesso!");
+      setDialogOpen(false);
+      refresh();
+      setFormData({
+        resource: "",
+        start_hour: "",
+        end_hour: "",
+        date: "",
+        sponsor: "",
       });
 
-      if (!response.success) {
-        toast.error(`Erro ao criar agendamento em ${date}: ${response.error}`);
-        return;
-      }
+
+    } catch (err) {
+      toast.error("Falha ao criar agendamento");
+      console.error(err);
     }
-
-    toast.success("Agendamento(s) criado(s) com sucesso!");
-    setDialogOpen(false);
-    refresh(); // atualiza a home page
-
-  } catch (err) {
-    toast.error("Falha ao criar agendamento");
-    console.error(err);
   }
-}
 
   useEffect(() => {
     const fetchHours = async () => {
       const { data, error } = await supabase.from("Hours").select("*");
-      if (error) {
-        console.error("Erro ao buscar horários:", error);
-      } else {
-        setHours(data);
-      }
+      if (!error && data) setHours(data);
     };
 
-    const fetchLabs = async () => {
-        const { data, error } = await supabase.from("Resources").select("*");
-        if (error) {
-            console.error("Erro ao buscar laboratórios:", error);
-        } else {
-            setResources(data);
-        }
-    }
-    fetchLabs();
+    const fetchResources = async () => {
+      const { data, error } = await supabase.from("Resources").select("*");
+      if (!error && data) setResources(data);
+    };
+
     fetchHours();
+    fetchResources();
   }, []);
 
-  const filteredResources = resources.filter(resource => resource.type === "Lab");
-  
+  const filteredResources = resources.filter(
+    (r) => r.type === resourceType
+  );
 
   const filteredHours = hours.filter((hour) => {
     const [h] = hour.time.split(":").map(Number);
@@ -144,64 +141,86 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
     return true;
   });
 
-
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogContent className="max-w-lg">
         <DialogTitle>Criar Agendamento</DialogTitle>
-        <DialogDescription>Preencha os dados abaixo para criar um novo agendamento.</DialogDescription>
+        <DialogDescription>
+          Preencha os dados abaixo para criar um novo agendamento.
+        </DialogDescription>
+
         <form onSubmit={handleSubmit} className="grid gap-4 py-4">
-          {/* Laboratório */}
+          
+          {/* Tipo de Recurso */}
           <div className="flex flex-col gap-2">
-            <Label>Laboratório</Label>
+            <Label>Tipo de Recurso</Label>
             <Select
-                onValueChange={(value) =>
-                  setFormData({ ...formData, resource: value })
-                }
-                value={formData.resource}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Selecione" />
-                </SelectTrigger>
-                <SelectContent>
-                  {filteredResources.length > 0 ? (
-                    filteredResources.map((resource) => (
-                      <SelectItem key={resource.id} value={resource.id.toString()}>
-                        {resource.name}
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <SelectItem disabled value="empty">
-                      Nenhum laboratório disponível
-                    </SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
+              onValueChange={(value) =>
+                setResourceType(value as "Lab" | "Aud")
+              }
+              value={resourceType}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Selecione o tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Lab">Laboratório</SelectItem>
+                <SelectItem value="Aud">Auditório</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-         
+          {/* Recurso */}
+          <div className="flex flex-col gap-2">
+            <Label>{resourceType === "Lab" ? "Laboratório" : "Auditório"}</Label>
+            <Select
+              onValueChange={(value) =>
+                setFormData({ ...formData, resource: value })
+              }
+              value={formData.resource}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue
+                  placeholder={`Selecione um ${resourceType === "Lab" ? "laboratório" : "auditório"}`}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {filteredResources.length > 0 ? (
+                  filteredResources.map((r) => (
+                    <SelectItem key={r.id} value={r.id.toString()}>
+                      {r.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem disabled value="empty">
+                    Nenhum {resourceType === "Lab" ? "laboratório" : "auditório"} disponível
+                  </SelectItem>
+                )}
+              </SelectContent>
+            </Select>
+          </div>
 
-          {/* Horários */}
+          {/* Turno e horários */}
           <div className="grid grid-cols-3 gap-4">
-             {/* Turno */}
             <div className="flex flex-col gap-2">
-                <Label>Turno</Label>
-                <Select
+              <Label>Turno</Label>
+              <Select
                 onValueChange={(value) => setSelectedShift(value)}
                 value={selectedShift}
-                >
+              >
                 <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione o turno" />
+                  <SelectValue placeholder="Selecione o turno" />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="Morning">Manhã</SelectItem>
-                    <SelectItem value="Afternoon">Tarde</SelectItem>
-                    <SelectItem value="Night">Noite</SelectItem>
+                  <SelectItem value="Morning">Manhã</SelectItem>
+                  <SelectItem value="Afternoon">Tarde</SelectItem>
+                  <SelectItem value="Night">Noite</SelectItem>
                 </SelectContent>
-                </Select>
+              </Select>
             </div>
+
             <div className="flex flex-col gap-2">
-              <Label>Horário de Início</Label>
+              <Label>Início</Label>
               <Select
                 onValueChange={(value) =>
                   setFormData({ ...formData, start_hour: value })
@@ -220,7 +239,7 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
                     ))
                   ) : (
                     <SelectItem disabled value="empty">
-                      Nenhum horário disponível
+                      Nenhum horário
                     </SelectItem>
                   )}
                 </SelectContent>
@@ -228,7 +247,7 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label>Horário de Fim</Label>
+              <Label>Fim</Label>
               <Select
                 onValueChange={(value) =>
                   setFormData({ ...formData, end_hour: value })
@@ -247,7 +266,7 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
                     ))
                   ) : (
                     <SelectItem disabled value="empty">
-                      Nenhum horário disponível
+                      Nenhum horário
                     </SelectItem>
                   )}
                 </SelectContent>
@@ -256,7 +275,6 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
           </div>
 
           {/* Data */}
-          
           <div className="flex flex-col gap-2">
             <Label htmlFor="date">Data</Label>
             <Input
@@ -267,36 +285,38 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
                 setFormData({ ...formData, date: e.target.value })
               }
             />
-            <div className="flex gap-2 mt-2"> 
+          {resourceType === "Lab" ? (
+            <div className="flex gap-2 mt-2">
               <Label htmlFor="recurrence">Recorrente?</Label>
-              <Checkbox 
+              <Checkbox
                 checked={isRecurring}
-                onCheckedChange={(checked) => {
-                setIsRecurring(!!checked); 
-                console.log("Recorrente agora:", !!checked);
-              }} className="border-primary"></Checkbox>
+                onCheckedChange={(checked) => setIsRecurring(!!checked)}
+                className="border-primary"
+              />
             </div>
+          ) : null}
           </div>
-            {/* Solicitante */}
-            <div className="flex flex-col gap-2">
+
+          {/* Solicitante */}
+          <div className="flex flex-col gap-2">
             <Label htmlFor="sponsor">Solicitante</Label>
             <Input
-
-                type="text"
-                id="sponsor"
-                value={formData.sponsor}
-                onChange={(e) =>
+              type="text"
+              id="sponsor"
+              value={formData.sponsor}
+              onChange={(e) =>
                 setFormData({ ...formData, sponsor: e.target.value })
-                }
-                placeholder="Nome do solicitante"
-                />
-            </div>
-            <Button type="submit">Criar Agendamento</Button>
+              }
+              placeholder="Nome do solicitante"
+            />
+          </div>
+
+          <Button type="submit">Criar Agendamento</Button>
+          <Button variant="outline" onClick={() => setDialogOpen(false)}>
+            Cancelar
+          </Button>
         </form>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button>
-                
       </DialogContent>
-      
     </Dialog>
   );
 };

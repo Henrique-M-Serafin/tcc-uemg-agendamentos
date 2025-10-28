@@ -42,10 +42,10 @@ export function LoginPage() {
 
   return (
     <main className="flex max-w-screen w-screen h-screen ">
-      <div className="w-[40%] hidden lg:flex bg-primary"></div>
-      <div className="w-screen lg:w-[60%] flex flex-col justify-center items-center gap-2">
-        <h1 className="text-xl font-semibold">Terminal Universitário de Calendário - UEMG</h1>
-        <Card className="w-md bg-background shadow-lg border-secondary">
+      {/* <div className="w-[40%] hidden lg:flex bg-primary"></div> */}
+      <div className="w-screen  flex flex-col justify-center items-center gap-2">
+        <h1 className="text-md lg:text-lg  font-semibold">Terminal Universitário de Calendário - UEMG</h1>
+        <Card className="lg:w-sm max-w-screen w-xs bg-background shadow-lg border-secondary">
           <CardHeader className="flex flex-col justify-center items-center gap-2">
             <CardTitle>Realize seu login</CardTitle>
             <form
@@ -85,7 +85,7 @@ export function LoginPage() {
           </CardHeader>
           <CardFooter className="flex w-full">
             {loginType === null && (
-              <div className="flex gap-2 w-full justify-between">
+              <div className="flex flex-col lg:flex-row gap-2 w-full justify-between">
                 <Button variant={"outline"} onClick={() => setLoginType("admin")}>
                   Login como Admin
                 </Button>
@@ -107,7 +107,7 @@ export function LoginPage() {
               </div>
             )}
           </CardFooter>
-          <span className={`text-center ${loginType === null ? "" : "hidden"}`}>
+          <span className={`lg:text-md text-xs text-center ${loginType === null ? "" : "hidden"}`}>
             Entre como admin ou visitante
           </span>
         </Card>
