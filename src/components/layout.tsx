@@ -1,4 +1,4 @@
-import { CalendarDays, House } from "lucide-react";
+import { CalendarDays, Car, House } from "lucide-react";
 import Sidebar from "./sidebar";
 import Navbar from "./Navbar";
 import { AppointmentsProvider } from "@/context/AppointmentsContext";
@@ -9,8 +9,10 @@ interface LayoutProps {
 }
 
 const Items = [
-  { icon: <House />, label: "Dashboard", path: "/dashboard" },
-  { icon: <CalendarDays />, label: "Agendamentos", path: "/agendamentos" },
+  { icon: <House />, label: "Agendamentos", path: "/agendamentos" },
+  { icon: <Car />, label: "Veículos", path: "/veiculos" },
+
+  { icon: <CalendarDays />, label: "Solicitar Agendamento", path: "/solicitar-agendamento" },
 ];
 
 export function Layout({ children }: LayoutProps) {

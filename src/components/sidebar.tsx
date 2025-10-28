@@ -6,7 +6,7 @@ import { Avatar, AvatarImage} from "@/components/ui/avatar";
 import { Switch } from "./ui/switch";
 import { useTheme } from "@/context/ThemeProvider";
 import { useAuth } from "@/context/AuthContext";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, Settings } from "lucide-react";
 import { CreateAppointmentDialog } from "./CreateAppointmentDialog";
 
 
@@ -24,11 +24,11 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ icon, label, path }) => {
 
     <Link
       to={path}
-      className={` px-4 py-2 flex gap-2 font-semibold rounded-md mb-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+      className={` px-4 py-2 text-sm flex gap-2 font-semibold rounded-md mb-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
         isActive ? "bg-sidebar-primary text-sidebar-primary-foreground" : "text-sidebar-foreground"
       }`}
     >
-      {icon && <span className="w-5 h-5">{icon}</span>}
+      {icon && <span className="w-5 h-5 flex items-center">{icon}</span>}
       {label}
     </Link>
   );
@@ -46,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
   const { profile, loading, signOut } = useAuth();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [shifts] = useState<"Morning" | "Afternoon" | "Evening">("Morning");
-
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
 
 
 
@@ -60,10 +60,21 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
     <>
 
       <aside className="w-64 hidden md:flex flex-col justify-between p-4 shadow-md bg-sidebar dark:border-r-1 fixed top-0 left-0 h-screen">
-      <div className="text-xl text-center text-accent font-bold mb-4">Laboratórios UEMG</div>
+      
+      <div className="text-lg flex items-center gap-2 text-primary font-bold mb-4">
+        <div className="flex flex-col items-center  animate-bounce-slow">
+          <img
+            src="/favicon.png"
+            alt="Logo UEMG"
+            className="w-12 h-12 drop-shadow-lg hover:scale-110 rounded-md transition-transform duration-300"
+            onClick={() => {navigate('/agendamentos')}}
+          />
+        </div>
+        Laboratórios UEMG
+      </div>
       <div className="flex-1">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Menu</h2>
+          <h2 className="text-lg font-bold">Menu</h2>
           <Switch checked={theme === 'dark'} onCheckedChange={toggleTheme} />
           
         </div>  
@@ -84,17 +95,24 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
           
       </div>
       <div className="mt-4 flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <Avatar >
-              <AvatarImage className="" src="https://github.com/shadcn.png" />
-            </Avatar>
-            {/* exibe o nome assim que o profile estiver carregado */}
-            {loading ? (
-              <p className="text-sm text-muted-foreground italic">Carregando...</p>
-            ) : (
-              <p className="font-semibold">
-                {profile?.name || "Usuário não identificado"}
-              </p>
+          <div className="flex items-center gap-2 justify-between">
+            <div className="flex items-center gap-2">
+              <Avatar >
+                <AvatarImage className="" src="https://github.com/shadcn.png" />
+              </Avatar>
+              {/* exibe o nome assim que o profile estiver carregado */}
+              {loading ? (
+                <p className="text-sm text-muted-foreground italic">Carregando...</p>
+              ) : (
+                <p className="font-semibold">
+                  {profile?.name || "Usuário não identificado"}
+                </p>
+              )}
+            </div>
+            {profile?.type === "admin" && (
+              <Button variant="ghost" className="" onClick={() => setUpdateDialogOpen(true)}>
+                <Settings className="h-5 w-5"/>
+              </Button>
             )}
           </div>
           <Button 
@@ -107,13 +125,21 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
       </div>
       </aside>
       {profile?.type === "admin" && (
+        <>
         <CreateAppointmentDialog
           dialogOpen={dialogOpen}
           setDialogOpen={setDialogOpen}
           shifts={shifts}
           
         />
+        {/* <UpdateAdminEmailDialog 
+          dialogOpen={updateDialogOpen}
+          setDialogOpen={setUpdateDialogOpen}
+        /> */}
+        </>
       )}
+
+
     </>
   );
 };

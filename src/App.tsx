@@ -31,14 +31,14 @@ function App() {
             </PublicRoute>
           }
         />
-        <Route path="/dashboard" 
+        <Route path="/agendamentos" 
           element={
             <PrivateRoute>
               <HomePage />
             </PrivateRoute>
           } 
         />
-        <Route path='/agendamentos'
+        <Route path='/solicitar-agendamento'
           element={
             <PrivateRoute>
               <AppointmentsPage />

@@ -4,6 +4,8 @@ import { useResources } from "@/hooks/use-supabase-client";
 import type { AppointmentWithRelations } from "@/types";
 import { useState } from "react";
 import { useAppointmentsContext } from "@/context/AppointmentsContext";
+import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const weekDays = [
   { label: "Segunda-Feira", value: "mon" },
@@ -99,6 +101,18 @@ export function HomePage() {
 
   return (
     <main>
+      
+      {/* Indicador de scroll para baixo */}
+        <div className="fixed bottom-3 right-3 animate-bounce duration-[2s] cursor-pointer z-50">
+          <Button
+            onClick={() => window.scrollBy({ top: window.innerHeight, behavior: "smooth" })}
+            className="bg-background border-primary border-1 text-white p-5 rounded-full shadow-lg hover:scale-110 hover:bg-background hover:border-2 transition-transform"
+            aria-label="Ver mais conteúdo"
+          >
+            <ChevronDown className="text-primary"/>
+          </Button>
+        </div>
+
       <WeekDaySelector
         weekDays={weekDays}
         onChange={(day) => {

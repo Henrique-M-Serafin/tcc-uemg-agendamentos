@@ -26,7 +26,7 @@ export function LoginPage() {
         return;
       }
 
-      navigate("/dashboard");
+      navigate("/agendamentos");
     }
   };
 
@@ -37,15 +37,22 @@ export function LoginPage() {
       setErrorMsg(error);
       return;
     }
-    navigate("/dashboard");
+    navigate("/agendamentos");
   };
 
   return (
     <main className="flex max-w-screen w-screen h-screen ">
-      {/* <div className="w-[40%] hidden lg:flex bg-primary"></div> */}
-      <div className="w-screen  flex flex-col justify-center items-center gap-2">
+      <div className="w-[40%] hidden lg:flex bg-cover border-r-1 border-primary bg-[url('/public/bg-login.png')]"></div>
+      <div className="w-screen w-[60%] flex flex-col justify-center items-center gap-2">
+        <div className="flex flex-col items-center mb-2 animate-bounce-slow">
+          <img
+            src="/favicon.png"
+            alt="Logo UEMG"
+            className="w-14 h-14 drop-shadow-lg hover:scale-110 rounded-md transition-transform duration-300"
+          />
+        </div>
         <h1 className="text-md lg:text-lg  font-semibold">Terminal Universitário de Calendário - UEMG</h1>
-        <Card className="lg:w-sm max-w-screen w-xs bg-background shadow-lg border-secondary">
+        <Card className="lg:w-sm max-w-screen w-xs bg-background shadow-lg border-primary">
           <CardHeader className="flex flex-col justify-center items-center gap-2">
             <CardTitle>Realize seu login</CardTitle>
             <form
