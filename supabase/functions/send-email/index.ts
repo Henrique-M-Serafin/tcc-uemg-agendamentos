@@ -39,6 +39,7 @@ serve(async (req: Request) => {
       body: JSON.stringify({
         from: `Agendamentos <onboarding@resend.dev>`,
         to: [adminEmail],
+        cc: [from],
         subject: "Nova solicitação de agendamento",
         html: htmlBody,
       }),

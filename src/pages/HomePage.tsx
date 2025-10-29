@@ -100,7 +100,7 @@ export function HomePage() {
   }
 
   return (
-    <main>
+    <main className="pb-24 md:pb-4">
       
       {/* Indicador de scroll para baixo */}
         <div className="fixed lg:inline-block hidden bottom-3 right-3 animate-bounce duration-[2s] cursor-pointer z-50">

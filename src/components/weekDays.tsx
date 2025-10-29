@@ -77,8 +77,8 @@ export const WeekDaySelector: React.FC<WeekDaySelectorProps> = ({
   };
 
   return (
-    <div className="mb-8">
-      <div className="p-4">
+    <div className="mb-6">
+      <div className="p-2">
         <div className="flex flex-col lg:flex-row lg:justify-around justify-center items-center gap-2">
           <div className="flex gap-4 items-center">
             <Calendar className="w-6 h-6 text-primary" />

@@ -77,7 +77,7 @@ export function AppointmentsPage() {
 
 
     return (
-        <main className="p-4 flex  justify-center h-full">
+        <main className="p-4 flex justify-center h-full pb-24 md:pb-4">
             <Card className="max-w-5xl w-full bg-background border-primary shadow-lg">
                 <CardHeader>
                     <CardTitle><h1 className="text-center text-primary font-semibold text-2xl">Solicitar Agendamento</h1></CardTitle>
