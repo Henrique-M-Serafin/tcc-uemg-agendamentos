@@ -1,4 +1,5 @@
 import { sendEmail } from "@/api/sendEmail";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -39,7 +40,7 @@ export function AppointmentsPage() {
         end_hour: '',
         description: '',
     });
-
+    const [alertDialogOpen, setAlertDialogOpen] = useState(false);
     async function handleSendEmail(e: React.FormEvent<HTMLFormElement>) {
   e.preventDefault();
 
@@ -55,7 +56,7 @@ export function AppointmentsPage() {
         });
 
         if (response.success) {
-        alert("Solicitação enviada com sucesso!");
+        setAlertDialogOpen(true);
         setFormData({
             name: '',
             from: '',
@@ -77,6 +78,21 @@ export function AppointmentsPage() {
 
 
     return (
+        <>
+        <AlertDialog open={alertDialogOpen} onOpenChange={setAlertDialogOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Sua solicitação foi enviada com sucesso!</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Um e-mail de cópia foi enviado para você. 
+                        Aguarde resposta do administrador.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <Button className="w-full" onClick={() => setAlertDialogOpen(false)}>Fechar</Button>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
         <main className="p-4 flex justify-center h-full pb-24 md:pb-4">
             <Card className="max-w-5xl w-full bg-background border-primary shadow-lg">
                 <CardHeader>
@@ -210,5 +226,6 @@ export function AppointmentsPage() {
             </Card>
             
         </main>
+        </>
     )
 }
