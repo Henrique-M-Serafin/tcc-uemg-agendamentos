@@ -103,7 +103,7 @@ export function HomePage() {
     <main>
       
       {/* Indicador de scroll para baixo */}
-        <div className="fixed bottom-3 right-3 animate-bounce duration-[2s] cursor-pointer z-50">
+        <div className="fixed lg:inline-block hidden bottom-3 right-3 animate-bounce duration-[2s] cursor-pointer z-50">
           <Button
             onClick={() => window.scrollBy({ top: window.innerHeight, behavior: "smooth" })}
             className="bg-background border-primary border-1 text-white p-5 rounded-full shadow-lg hover:scale-110 hover:bg-background hover:border-2 transition-transform"
