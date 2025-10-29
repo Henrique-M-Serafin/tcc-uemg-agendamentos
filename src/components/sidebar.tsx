@@ -46,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
   const { profile, loading, signOut } = useAuth();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [shifts] = useState<"Morning" | "Afternoon" | "Evening">("Morning");
-  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
+
 
 
 
@@ -110,7 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
               )}
             </div>
             {profile?.type === "admin" && (
-              <Button variant="ghost" className="" onClick={() => setUpdateDialogOpen(true)}>
+              <Button variant="ghost" className="">
                 <Settings className="h-5 w-5"/>
               </Button>
             )}
