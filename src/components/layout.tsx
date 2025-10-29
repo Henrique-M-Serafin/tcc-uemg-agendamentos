@@ -19,15 +19,15 @@ export function Layout({ children }: LayoutProps) {
   return (
     <AppointmentsProvider>
       <div className="min-h-screen bg-background flex flex-col">
-        {/* Navbar fixa no topo */}
+        {/* Navbar fixa no topo (visível sempre) */}
         <Navbar items={Items} />
 
         <div className="flex flex-1 relative">
-          {/* Sidebar fixa à esquerda */}
+          {/* Sidebar só aparece em telas md+ */}
           <Sidebar items={Items} />
 
-          {/* Conteúdo principal com margem igual à largura da sidebar */}
-          <main className="flex-1 p-6 ml-64 overflow-y-auto">
+          {/* Em telas pequenas, a margin-left é removida */}
+          <main className="flex-1 p-6 md:ml-64 overflow-y-auto transition-all duration-300">
             {children}
           </main>
 

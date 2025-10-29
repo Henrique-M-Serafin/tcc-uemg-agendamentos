@@ -137,7 +137,7 @@ export function HomePage() {
       {(loading || loadingResources) ? (
         <p>Carregando laboratórios...</p>
       ) : (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {labsWithAppointments.map((lab) => (
             <LabCard
               key={lab.id}
@@ -156,7 +156,7 @@ export function HomePage() {
       {(loading || loadingResources) ? (
         <p>Carregando auditórios...</p>
       ) : (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {audWithAppointments.map((aud) => (
             <LabCard
               key={aud.id}

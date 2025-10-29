@@ -13,19 +13,18 @@ interface NavbarItemProps {
   path: string;
 }
 
-const NavbarItem: React.FC<NavbarItemProps> = ({ icon, label, path }) => {
+const NavbarItem: React.FC<NavbarItemProps> = ({ icon, path }) => {
   const location = useLocation();
   const isActive = location.pathname === path;
 
   return (
     <Link
       to={path}
-      className={`px-1 py-2 flex gap-2 rounded-md  ${
+      className={`p-2 flex gap-2 rounded-md  ${
         isActive ? "bg-sidebar-primary text-sidebar-primary-foreground" : "text-sidebar-foreground hover:text-sidebar-accent-foreground"
       }`}
     >
-      {icon && <span className="w-5 h-5">{icon}</span>}
-        <span className="text-sm">{label}</span>
+      {icon && <span className="w-6 h-6 flex items-center">{icon}</span>}
     </Link>
   );
 };
@@ -46,8 +45,8 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
 
 
   return (
-    <nav className="w-full max-w-screen md:hidden bg-sidebar border-b border-sidebar-border shadow-sm">
-      <div className="max-w-7xl mx-auto  px-4 sm:px-6 lg:px-8">
+    <nav className="w-full overflow-x-hidden md:hidden bg-sidebar border-b border-sidebar-border shadow-sm">
+      <div className="w-full px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
@@ -75,7 +74,7 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
           {/* Navigation Items */}
           
         </div>
-        <div className="flex p-2 items-center justify-center">
+        <div className="flex mb-1 items-center justify-evenly">
             {items.map((item) => (
                   <NavbarItem key={item.path} {...item} />
             ))}

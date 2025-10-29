@@ -78,7 +78,7 @@ export function AppointmentsPage() {
 
     return (
         <main className="p-4 flex  justify-center h-full">
-            <Card className="max-w-5xl w-full bg-background border-secondary shadow-lg">
+            <Card className="max-w-5xl w-full bg-background border-primary shadow-lg">
                 <CardHeader>
                     <CardTitle><h1 className="text-center text-primary font-semibold text-2xl">Solicitar Agendamento</h1></CardTitle>
                     <CardDescription className="text-center">Preencha o formulário abaixo para solicitar um agendamento.</CardDescription>
@@ -88,6 +88,7 @@ export function AppointmentsPage() {
                         <div className="flex flex-col gap-2">
                             <Label htmlFor="name">Nome<span className="text-destructive">*</span></Label>
                             <Input
+                                className="border-1 border-primary"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 autoComplete="off" id="name" placeholder="Digite seu nome" />
@@ -95,6 +96,7 @@ export function AppointmentsPage() {
                         <div className="flex flex-col gap-2">
                             <Label htmlFor="email">E-mail<span className="text-destructive">*</span></Label>
                             <Input
+                                className="border-1 border-primary"
                                 value={formData.from}
                                 onChange={(e) => setFormData({ ...formData, from: e.target.value })}
                                 autoComplete="off" id="email" placeholder="Digite seu e-mail" />
@@ -103,10 +105,11 @@ export function AppointmentsPage() {
                             <div className="flex flex-col gap-2 w-full">
                                 <Label htmlFor="lab">Laboratório ou Veículo<span className="text-destructive">*</span></Label>
                                 <Select 
+                                
                                     value={selectedType}
                                     onValueChange={(value) => setSelectedType(value as 'lab' | 'vehicle')}
                                 >
-                                    <SelectTrigger className="w-full">
+                                    <SelectTrigger className="w-full border-primary border-1">
                                         <SelectValue placeholder="Selecione um laboratório" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -120,6 +123,7 @@ export function AppointmentsPage() {
                             <div className="flex flex-col w-full gap-2">
                                 <Label htmlFor="date">Data<span className="text-destructive">*</span></Label>
                                 <Input
+                                    className="border-1 border-primary"
                                     type="date"
                                     id="date"
                                     value={formData.date}
@@ -134,7 +138,7 @@ export function AppointmentsPage() {
                                    value={selectedShift}
                                    onValueChange={(value) => setSelectedShift(value as 'morning' | 'afternoon' | 'evening')}
                                >
-                                   <SelectTrigger className="w-full">
+                                   <SelectTrigger className="w-full border-primary border-1">
                                        <SelectValue placeholder="Selecione o turno" />
                                    </SelectTrigger>
                                    <SelectContent>
@@ -145,7 +149,7 @@ export function AppointmentsPage() {
                                </Select>
                             </div>
                             
-                            <div className="flex items-center gap-2 w-full">
+                            <div className="flex flex-col lg:flex-row items-center gap-2 w-full">
                                 <div className="flex flex-col gap-2 w-full">
                                 <Label htmlFor="time">Horário (Inicio)<span className=" text-destructive">*</span></Label>
                                 <Select
@@ -154,7 +158,7 @@ export function AppointmentsPage() {
                                     defaultValue={shifts[selectedShift][0]}
                                     key={selectedShift} // força re-render quando o turno muda
                                 >
-                                    <SelectTrigger className="w-full">
+                                    <SelectTrigger className="w-full border-primary border-1">
                                         <SelectValue placeholder="Selecione a hora" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -172,7 +176,7 @@ export function AppointmentsPage() {
                                     defaultValue={shifts[selectedShift][0]}
                                     key={selectedShift} // força re-render quando o turno muda
                                 >
-                                    <SelectTrigger className="w-full">
+                                    <SelectTrigger className="w-full border-primary border-1">
                                         <SelectValue placeholder="Selecione a hora" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -189,9 +193,10 @@ export function AppointmentsPage() {
                         <div className="flex flex-col gap-2 flex-1">
                             <Label htmlFor="description">Descrição (Opcional)</Label>
                             <Textarea
+                            
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                className="flex-1 resize-none" id="description" placeholder="Digite suas observações aqui..." 
+                                className="flex-1 resize-none border-1 border-primary" id="description" placeholder="Digite suas observações aqui..." 
                                 />
                         </div>
                         <Button 

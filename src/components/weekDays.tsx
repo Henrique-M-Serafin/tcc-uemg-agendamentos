@@ -79,15 +79,13 @@ export const WeekDaySelector: React.FC<WeekDaySelectorProps> = ({
   return (
     <div className="mb-8">
       <div className="p-4">
-        <div className="flex justify-around">
+        <div className="flex flex-col lg:flex-row lg:justify-around justify-center items-center gap-2">
           <div className="flex gap-4 items-center">
             <Calendar className="w-6 h-6 text-primary" />
             <h2 className="font-semibold">Selecionar Data</h2>
           </div>
           <div className="flex gap-2 items-center">
-            <Button variant="outline" onClick={handleReset}>
-              <X />
-            </Button>
+            
             <Button variant="outline" onClick={handleToday}>Hoje</Button>
             <Button variant="outline" onClick={() => handleLeftRight("left")}>
               <ChevronLeft />
@@ -95,17 +93,24 @@ export const WeekDaySelector: React.FC<WeekDaySelectorProps> = ({
             <Button variant="outline" onClick={() => handleLeftRight("right")}>
               <ChevronRight />
             </Button>
+            <Button variant="outline" onClick={handleReset}>
+              <X />
+            </Button>
           </div>
         </div>
       </div>
-      <div className="flex justify-center gap-6 mt-6">
+      <div className="grid grid-cols-2 lg:grid-cols-6 justify-center gap-2 w-full mt-6">
         {weekDays.map((day) => {
           const isSelected = selectedDay === day.value;
           return (
             <Button
               key={day.value}
               variant={isSelected ? "default" : "outline"}
-              className={`p-8 ${isSelected ? "bg-accent text-white" : "hover:bg-accent"}`}
+              className={`px-4 py-3 sm:px-6 sm:py-4 md:px-8 md:py-6 text-sm sm:text-base ${
+                isSelected
+                  ? "bg-accent text-white"
+                  : "hover:bg-accent hover:text-white transition-colors"
+              }`}
               onClick={() => handleClick(day)}
             >
               {day.label}
@@ -113,6 +118,8 @@ export const WeekDaySelector: React.FC<WeekDaySelectorProps> = ({
           );
         })}
       </div>
+
+
     </div>
   );
 };
