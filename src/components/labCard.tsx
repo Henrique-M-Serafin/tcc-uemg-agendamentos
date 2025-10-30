@@ -39,12 +39,13 @@ const LabCard: React.FC<LabCardProps> = ({
             {appointments.length > 0 ? (
               appointments.map((app) => {
                 // Formatar data no padrão brasileiro
-                const formattedDate = new Date(app.date).toLocaleDateString("pt-BR", {
+                const [year, month, day] = app.date.split("-").map(Number);
+                const formattedDate = new Date(year, month - 1, day).toLocaleDateString("pt-BR", {
                   day: "2-digit",
                   month: "2-digit",
                   year: "numeric",
                 });
-
+               
                 return (
                   <Card
                     key={app.id}
