@@ -1,4 +1,4 @@
-import { Calendar } from "lucide-react";
+import { Calendar, AlarmClock, CalendarFold, GraduationCap } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
@@ -30,25 +30,43 @@ const LabCard: React.FC<LabCardProps> = ({
   return (
     <>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
+        <DialogContent className="border-1 border-primary">
           <DialogTitle className="text-lg font-semibold">
             Detalhes do {title}
           </DialogTitle>
           <DialogDescription>{capacity} alunos</DialogDescription>
           <ScrollArea className="max-h-[60vh]">
             {appointments.length > 0 ? (
-              appointments.map((app) => (
-                <Card
-                  key={app.id}
-                  className="mb-2 mx-4 border-secondary bg-background-elevated shadow-md"
-                >
-                  <CardContent>
-                    <CardTitle>
-                      {app.date} | {app.start_time} - {app.end_time} → {app.sponsor}
-                    </CardTitle>
-                  </CardContent>
-                </Card>
-              ))
+              appointments.map((app) => {
+                // Formatar data no padrão brasileiro
+                const formattedDate = new Date(app.date).toLocaleDateString("pt-BR", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                });
+
+                return (
+                  <Card
+                    key={app.id}
+                    className="mb-2 mx-4 border-primary bg-background-elevated shadow-md"
+                  >
+                    <CardContent className="px-3 flex flex-col gap-3">
+                      <div className="flex flex-wrap justify-between items-center">
+                        <span className="flex items-center gap-1 text-md ">
+                          <AlarmClock className="h-5 w-5" /> {app.start_time} - {app.end_time}
+                        </span>
+                        <span className="flex items-center gap-1 text-md font-medium text-primary">
+                          <CalendarFold className="h-5 w-5"/> {formattedDate}
+                        </span>
+                        
+                      </div>
+                      <div className="flex items-center gap-1 text-md">
+                        <GraduationCap className="h-5 w-5"/> <span className="font-semibold">{app.sponsor}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })
             ) : (
               <p className="mx-4 my-2 text-sm text-muted-foreground">
                 Nenhum agendamento

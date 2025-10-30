@@ -83,3 +83,74 @@ export function useResources() {
   return { resources, loading };
 }
 
+export function useVehicleAppointments() {
+  const [vehicleAppointments, setVehicleAppointments] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchVehicleAppointments = async () => {
+    setLoading(true);
+
+    const { data, error } = await supabase
+      .from("VehicleAppointmentsView")
+      .select("*")
+      .order("date", { ascending: true });
+
+    if (error) {
+      console.error("Erro ao buscar agendamentos de veículos:", error);
+    } else {
+      setVehicleAppointments(data || []);
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchVehicleAppointments();
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) fetchVehicleAppointments();
+      else setVehicleAppointments([]);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  return { vehicleAppointments, loading, refresh: fetchVehicleAppointments };
+} 
+
+export function useVehicles() {
+  const [vehicles, setVehicles] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchVehicles = async () => {
+    setLoading(true);
+
+    const { data, error } = await supabase
+      .from("Vehicles")
+      .select("*")
+      .order("type", { ascending: true })
+      .order("model", { ascending: true });
+
+    if (error) {
+      console.error("Erro ao buscar veículos:", error);
+      setVehicles([]);
+    } else {
+      setVehicles(data || []);
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchVehicles();
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) fetchVehicles();
+      else setVehicles([]);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  return { vehicles, loading, refresh: fetchVehicles };
+}
