@@ -1,9 +1,10 @@
 import VehicleCard from "@/components/vehiclesCard";
-import { useVehicles, useVehicleAppointments } from "@/hooks/use-supabase-client";
+import { useVehicleAppointmentsContext } from "@/context/VehicleAppointmentsContext";
+import { useVehicles } from "@/hooks/use-supabase-client";
 
 export function VehiclesPage() {
   const { vehicles, loading: loadingVehicles } = useVehicles();
-  const { vehicleAppointments, loading: loadingAppointments } = useVehicleAppointments();
+  const { vehicleAppointments, loading: loadingAppointments } = useVehicleAppointmentsContext();
 
   const loading = loadingVehicles || loadingAppointments;
 

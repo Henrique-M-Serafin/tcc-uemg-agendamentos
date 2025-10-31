@@ -3,6 +3,7 @@ import Sidebar from "./sidebar";
 import Navbar from "./Navbar";
 import { AppointmentsProvider } from "@/context/AppointmentsContext";
 import { Toaster } from "@/components/ui/sonner";
+import { VehicleAppointmentsProvider } from "@/context/VehicleAppointmentsContext";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ const Items = [
 
 export function Layout({ children }: LayoutProps) {
   return (
+    <VehicleAppointmentsProvider>
     <AppointmentsProvider>
       <div className="min-h-screen bg-background flex flex-col">
         {/* Navbar fixa no topo (visível sempre) */}
@@ -35,5 +37,6 @@ export function Layout({ children }: LayoutProps) {
         </div>
       </div>
     </AppointmentsProvider>
+    </VehicleAppointmentsProvider>
   );
 }

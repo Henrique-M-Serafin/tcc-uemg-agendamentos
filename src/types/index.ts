@@ -30,9 +30,33 @@ export type AppointmentWithRelations = {
   end_time: string | null;   // "HH:MM:SS"
 };
 
-export type Resource = {
+export type VehicleAppointmentsWithRelations = {
+  appointment_id: string; // virou UUID na sua tabela
+  vehicle_id: number;
+  type: string;
+  model: string;
+  capacity: number;
+  status: string;
+  sponsor: string;
+  date: string; // formato ISO (YYYY-MM-DD)
+};
+
+export interface Resource {
   id: string;
   name: string;
   type: string;
   capacity?: number; 
 };
+
+export interface Hour {
+  id: string;
+  time: string;
+}
+
+export interface Vehicle {
+  id: string;
+  type: string;
+  model: string;
+  capacity: number;
+  status: string;
+}

@@ -6,8 +6,10 @@ import { Avatar, AvatarImage} from "@/components/ui/avatar";
 import { Switch } from "./ui/switch";
 import { useTheme } from "@/context/ThemeProvider";
 import { useAuth } from "@/context/AuthContext";
-import { PlusIcon, Settings } from "lucide-react";
+import { BookOpen, PlusIcon } from "lucide-react";
 import { CreateAppointmentDialog } from "./CreateAppointmentDialog";
+import { Separator } from "./ui/separator";
+import { ManageResourcesDialog } from "./ManageResourcesDialog";
 
 
 interface SidebarItemProps {
@@ -46,7 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
   const { profile, loading, signOut } = useAuth();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [shifts] = useState<"Morning" | "Afternoon" | "Evening">("Morning");
-
+  const [manageDialogOpen, setManageDialogOpen] = useState(false);
 
 
 
@@ -74,16 +76,20 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
       </div>
       <div className="flex-1">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold">Menu</h2>
+          <h2 className="text-lg font-semibold">Menu</h2>
           <Switch checked={theme === 'dark'} onCheckedChange={toggleTheme} />
           
         </div>  
           {items.map((item) => (
                 <SidebarItem key={item.path} {...item} />
           ))}
-          {profile?.type === 'admin' && (
-          <Button 
           
+          {profile?.type === 'admin' && (
+          <section className="h-full flex flex-col gap-2">
+          
+          <Separator className=""/>
+          <h3 className="text-md font-semibold">Funções de Administrador</h3>
+          <Button 
               className="w-full p-5 border-primary border-1 hover:border-secondary" 
               onClick={() => setDialogOpen(true)}
               variant={"ghost"}
@@ -91,6 +97,15 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
               <PlusIcon></PlusIcon>
               Criar Agendamento
             </Button>
+            <Button 
+              variant="outline" className="w-full p-5"
+              onClick={() => setManageDialogOpen(true)}
+            >
+              <BookOpen className="h-5 w-5" />
+              Gerenciar Recursos
+            </Button>
+           
+            </section>
           )}
           
       </div>
@@ -109,11 +124,11 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
                 </p>
               )}
             </div>
-            {profile?.type === "admin" && (
+            {/* {profile?.type === "admin" && (
               <Button variant="ghost" className="">
                 <Settings className="h-5 w-5"/>
               </Button>
-            )}
+            )} */}
           </div>
           <Button 
             onClick={() => {
@@ -136,6 +151,10 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
           dialogOpen={updateDialogOpen}
           setDialogOpen={setUpdateDialogOpen}
         /> */}
+        <ManageResourcesDialog
+          manageDialogOpen={manageDialogOpen}
+          setManageDialogOpen={setManageDialogOpen}
+        />
         </>
       )}
 
