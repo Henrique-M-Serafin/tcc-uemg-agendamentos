@@ -64,3 +64,47 @@ entrypoint = "./functions/create-vehicle-appointment/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/create-vehicle-appointment/*.html" ]
+
+[functions.update-resource]
+enabled = true
+verify_jwt = true
+import_map = "./functions/update-resource/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/update-resource/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/update-resource/*.html" ]
+
+[functions.update-vehicle]
+enabled = true
+verify_jwt = true
+import_map = "./functions/update-vehicle/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/update-vehicle/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/update-vehicle/*.html" ]
+
+[functions.create-vehicle]
+enabled = true
+verify_jwt = true
+import_map = "./functions/create-vehicle/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/create-vehicle/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/create-vehicle/*.html" ]
+
+[functions.create-resource]
+enabled = true
+verify_jwt = true
+import_map = "./functions/create-resource/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/create-resource/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/create-resource/*.html" ]
