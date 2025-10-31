@@ -7,7 +7,7 @@ import { useResources, useVehicles } from "@/hooks/use-supabase-client";
 import { Card, CardContent, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "./ui/alert-dialog";
-import { EditResourceDialog } from "./editResourceDialog";
+import { EditResourceDialog } from "./EditResourceDialog";
 import { ScrollArea } from "./ui/scroll-area";
 
 interface ManageResourcesDialogProps {
