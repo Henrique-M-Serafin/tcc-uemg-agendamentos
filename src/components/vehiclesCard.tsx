@@ -22,7 +22,7 @@ import type { VehicleAppointmentsWithRelations } from "@/types";
 
 interface VehicleCardProps {
   name: string;
-  type?: string;
+  type: string;
   model?: string;
   capacity?: number;
   appointments?: VehicleAppointmentsWithRelations[];
@@ -42,6 +42,29 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
   const { profile } = useAuth();
 
   const badge = appointmentsList.length > 0 ? "Reservado" : "Disponível";
+  
+   const vehicleTypeMap: Record<string, string> = {
+    Car: "Carro",
+    Bus: "Ônibus",
+    Van: "Van",
+    };  
+
+  const getVehicleIcon = (type?: string) => {
+  if (!type) return <Car className="h-5 w-5 text-primary" />; // fallback
+
+  const key = type.trim().toLowerCase();
+
+    switch (key) {
+      case "car":
+        return <CarFront className="h-5 w-5 text-primary" />;
+      case "bus":
+        return <BusFront className="h-5 w-5 text-primary" />;
+      case "van":
+        return <Bus className="h-5 w-5 text-primary" />; // ou outro ícone de van
+      default:
+        return <Car className="h-5 w-5 text-primary" />; // fallback
+    }
+  };  
 
   const handleDelete = async () => {
     if (!selectedAppointmentId) return;
@@ -141,15 +164,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
       <Card className="bg-background-elevated shadow-lg">
         <CardHeader className="flex justify-between items-center">
           <div className="flex gap-2 items-center">
-            {type === "Car" ? (
-              <CarFront className="h-5 w-5 text-primary" />
-            ) : type === "Bus" ? (
-              <BusFront className="h-5 w-5 text-primary" />
-            ) : type === "Van" ? (
-              <Bus className="h-5 w-5 text-primary" />
-            ) : (
-              <Car className="h-5 w-5 text-primary" />
-            )}
+            {getVehicleIcon(type)}
 
             <CardTitle className="text-md font-semibold">{name}</CardTitle>
           </div>
@@ -163,7 +178,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
         </CardHeader>
 
         <CardContent>
-          <p>Tipo: {type ?? "Desconhecido"}</p>
+          <p>Tipo: {vehicleTypeMap[type] ?? "Desconhecido"}</p>
           <p>Modelo: {model ?? "Desconhecido"}</p>
           <p>
             Capacidade: {capacity} {capacity === 1 ? "pessoa" : "pessoas"}

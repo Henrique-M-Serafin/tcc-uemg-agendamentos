@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useAppointmentsContext } from "@/context/AppointmentsContext";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import { useAppData } from "@/context/AppDataContext";
 
 // 🔹 Lista dos dias da semana
 const weekDays = [
@@ -51,9 +52,9 @@ export function HomePage() {
   const today = new Date();
   const todayStr = formatDate(today);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+const { resources, loadingResources } = useAppData();
 
   const { appointments, loading } = useAppointmentsContext();
-  const { resources, loading: loadingResources } = useResources();
 
   // 🔹 Quando o usuário escolhe o dia, calcula a PRÓXIMA data desse dia
   function handleDayChange(day: { label: string; value: string } | null) {
@@ -97,13 +98,15 @@ export function HomePage() {
   );
 
   // 🔹 Separar e ordenar recursos (somente ativos se aplicável)
+  // 🔹 Separar e ordenar recursos (somente ativos)
   const labsOnly = resources
-    .filter((lab) => lab.type === "Lab")
+    .filter((lab) => lab.type === "Lab" && lab.is_active)
     .sort((a, b) => a.name.localeCompare(b.name));
 
   const audOnly = resources
-    .filter((r) => r.type === "Aud")
+    .filter((r) => r.type === "Aud" && r.is_active)
     .sort((a, b) => a.name.localeCompare(b.name));
+
 
   // 🔹 Enriquecer com status e agendamentos filtrados
   // Se houver selectedDate: pegamos apenas o primeiro agendamento daquele dia (o mais próximo)
@@ -157,7 +160,7 @@ export function HomePage() {
 
       {/* 🔹 Mostrar a data filtrada */}
       {selectedDate && (
-        <p className="text-center text-sm text-gray-500 mb-2">
+        <p className="text-center text-sm -mb-2">
           Mostrando agendamentos para o dia <b>{selectedDate}</b>
         </p>
       )}

@@ -1,18 +1,19 @@
 import VehicleCard from "@/components/vehiclesCard";
+import { useAppData } from "@/context/AppDataContext";
 import { useVehicleAppointmentsContext } from "@/context/VehicleAppointmentsContext";
-import { useVehicles } from "@/hooks/use-supabase-client";
+
 
 export function VehiclesPage() {
-  const { vehicles, loading: loadingVehicles } = useVehicles();
   const { vehicleAppointments, loading: loadingAppointments } = useVehicleAppointmentsContext();
-
+  const { vehicles, loadingVehicles } = useAppData();
+  
   const loading = loadingVehicles || loadingAppointments;
-
+  
   const vehicleTypeMap: Record<string, string> = {
     Car: "Carro",
     Bus: "Ônibus",
     Van: "Van",
-    };
+    };  
 
   if (loading) {
     return (
@@ -39,9 +40,11 @@ export function VehiclesPage() {
     appointmentsByVehicle[app.vehicle_id].push(app);
   });
 
+  const activeVehicles = vehicles.filter((v) => v.is_active);
+
   // Agrupar veículos por tipo
   const vehiclesByType: Record<string, typeof vehicles> = {};
-  vehicles.forEach((vehicle) => {
+  activeVehicles.forEach((vehicle) => {
     const type = vehicle.type ?? "Outros";
     if (!vehiclesByType[type]) vehiclesByType[type] = [];
     vehiclesByType[type].push(vehicle);
@@ -60,12 +63,12 @@ export function VehiclesPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {vehiclesByType[type].map((vehicle) => (
                 <VehicleCard
-                key={vehicle.id}
-                name={vehicle.model ?? vehicle.name ?? "Desconhecido"}
-                type={vehicle.type}
-                model={vehicle.model}
-                capacity={vehicle.capacity ?? 0}
-                appointments={appointmentsByVehicle[vehicle.id] ?? []}
+                  key={vehicle.id}
+                  name={vehicle.model ?? vehicle.name ?? "Desconhecido"}
+                  type={vehicle.type} // <-- aqui deve ser Car, Bus ou Van
+                  model={vehicle.model}
+                  capacity={vehicle.capacity ?? 0}
+                  appointments={appointmentsByVehicle[vehicle.id] ?? []}
                 />
             ))}
             </div>

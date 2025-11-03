@@ -5,15 +5,15 @@ import { useAppointments as useSupabaseAppointments } from "@/hooks/use-supabase
 interface AppointmentsContextType {
   appointments: any[];
   loading: boolean;
-  refresh: () => void;
+  refreshAppointments: () => void;
 }
 
 const AppointmentsContext = createContext<AppointmentsContextType | undefined>(undefined);
 
 export const AppointmentsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { appointments, loading, refresh } = useSupabaseAppointments();
+  const { appointments, loading, refreshAppointments } = useSupabaseAppointments();
   return (
-    <AppointmentsContext.Provider value={{ appointments, loading, refresh }}>
+    <AppointmentsContext.Provider value={{ appointments, loading, refreshAppointments }}>
       {children}
     </AppointmentsContext.Provider>
   );

@@ -32,7 +32,7 @@ export function useAppointments() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  return { appointments, loading, refresh: fetchAppointments };
+  return { appointments, loading, refreshAppointments: fetchAppointments };
 }
 
 
@@ -41,32 +41,30 @@ export function useResources() {
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let mounted = true;
+  // ⚡ Mova a função para o escopo do hook
+  const fetchResources = async () => {
+    setLoading(true);
 
-    async function fetchResources() {
-      setLoading(true);
-
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session) {
-        console.warn("Nenhuma sessão ativa — não buscar resources.");
-        setLoading(false);
-        return;
-      }
-
-      const { data, error } = await supabase.from("Resources").select("*");
-
-      if (!mounted) return;
-
-      if (error) {
-        console.error("Erro ao buscar resources:", error);
-      } else {
-        setResources(data || []);
-      }
-
+    const { data: sessionData } = await supabase.auth.getSession();
+    if (!sessionData.session) {
+      console.warn("Nenhuma sessão ativa — não buscar resources.");
       setLoading(false);
+      return;
     }
 
+    const { data, error } = await supabase.from("Resources").select("*");
+
+    if (error) {
+      console.error("Erro ao buscar resources:", error);
+      setResources([]);
+    } else {
+      setResources(data || []);
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
     fetchResources();
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -74,13 +72,10 @@ export function useResources() {
       else setResources([]);
     });
 
-    return () => {
-      mounted = false;
-      listener.subscription.unsubscribe();
-    };
+    return () => listener.subscription.unsubscribe();
   }, []);
 
-  return { resources, loading };
+  return { resources, loading, refreshResources: fetchResources };
 }
 
 export function useVehicleAppointments() {
@@ -115,7 +110,7 @@ export function useVehicleAppointments() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  return { vehicleAppointments, loading, refresh: fetchVehicleAppointments };
+  return { vehicleAppointments, loading, refreshVehicleAppointments: fetchVehicleAppointments };
 } 
 
 export function useVehicles() {
@@ -152,5 +147,5 @@ export function useVehicles() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  return { vehicles, loading, refresh: fetchVehicles };
+  return { vehicles, loading, refreshVehicles: fetchVehicles };
 }

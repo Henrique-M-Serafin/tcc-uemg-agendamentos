@@ -86,14 +86,14 @@ export const WeekDaySelector: React.FC<WeekDaySelectorProps> = ({
           </div>
           <div className="flex gap-2 items-center">
             
-            <Button variant="outline" onClick={handleToday}>Hoje</Button>
-            <Button variant="outline" onClick={() => handleLeftRight("left")}>
+            <Button variant="outline" title="Dia de Hoje" onClick={handleToday}>Hoje</Button>
+            <Button title="Dia Anterior" variant="outline" onClick={() => handleLeftRight("left")}>
               <ChevronLeft />
             </Button>
-            <Button variant="outline" onClick={() => handleLeftRight("right")}>
+            <Button title="Próxima Dia" variant="outline" onClick={() => handleLeftRight("right")}>
               <ChevronRight />
             </Button>
-            <Button variant="outline" onClick={handleReset}>
+            <Button  title="Limpar Filtros" variant="outline" onClick={handleReset}>
               <X />
             </Button>
           </div>
