@@ -51,7 +51,7 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
   shifts,
   onSuccess,
 }) => {
-  const { refresh } = useAppointmentsContext();
+  const { refreshAppointments } = useAppointmentsContext();
   const { refreshVehicles } = useVehicleAppointmentsContext();
   const [hours, setHours] = useState<Hour[]>([]);
   const [resources, setResources] = useState<Resource[]>([]);
@@ -172,7 +172,7 @@ export const CreateAppointmentDialog: React.FC<CreateAppointmentDialogProps> = (
         }
 
         toast.success("Agendamento(s) criado(s) com sucesso!");
-        refresh();
+        refreshAppointments();
 
       } else {
         // ❌ Tipo de recurso inválido
