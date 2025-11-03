@@ -108,3 +108,14 @@ entrypoint = "./functions/create-resource/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/create-resource/*.html" ]
+
+[functions.delete-resources]
+enabled = true
+verify_jwt = true
+import_map = "./functions/delete-resources/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/delete-resources/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/delete-resources/*.html" ]

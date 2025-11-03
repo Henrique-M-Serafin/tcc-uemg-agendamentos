@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
-import { DialogDescription } from "@radix-ui/react-dialog";
+import { Dialog, DialogContent, DialogTitle,  DialogDescription } from "./ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Separator } from "./ui/separator";
 import { useResources, useVehicles } from "@/hooks/use-supabase-client";
@@ -9,6 +8,8 @@ import { Button } from "./ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "./ui/alert-dialog";
 import { EditResourceDialog } from "./EditResourceDialog";
 import { ScrollArea } from "./ui/scroll-area";
+import { deleteResource } from "@/api/deleteResources";
+import { toast } from "sonner";
 
 interface ManageResourcesDialogProps {
   manageDialogOpen: boolean;
@@ -40,10 +41,28 @@ export const ManageResourcesDialog = ({
     selectedResource === "Vehicle" ? vehicles : filteredResources;
 
 
-  const handleDelete = () => {
-    // Lógica para deletar o recurso selecionado
-    setDeleteDialogOpen(false);
+  const handleDelete = async () => {
+    if (!selectedItem) return;
+
+    try {
+      if (selectedResource === "Vehicle") {
+        // 🚗 Deletar veículo
+        // const result = await deleteVehicle(selectedItem.id);
+        toast.success("Veículo excluído com sucesso!");
+      } else {
+        // 🧩 Deletar recurso (Lab/Aud)
+        const result = await deleteResource(selectedItem.id);
+        toast.success(result.message || "Recurso excluído com sucesso!");
+      }
+
+      setDeleteDialogOpen(false);
+      setSelectedItem(null);
+    } catch (error: any) {
+      console.error("Erro ao excluir:", error);
+      toast.error(error.message || "Erro ao excluir item");
+    }
   };
+
   return (
     <>
     <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
@@ -56,14 +75,14 @@ export const ManageResourcesDialog = ({
           </AlertDialogHeader>
 
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setDeleteDialogOpen(false)}>
-              Cancelar
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              className="bg-destructive text-background hover:bg-destructive/90"
-            >
-              Confirmar Exclusão
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <Button
+                onClick={handleDelete}
+                className="bg-destructive text-background hover:bg-destructive/90"
+              >
+                Confirmar Exclusão
+              </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -133,7 +152,10 @@ export const ManageResourcesDialog = ({
                         Editar
                       </Button>
                       <Button
-                        onClick={() => setDeleteDialogOpen(true)}
+                        onClick={() => {
+                          setSelectedItem(item); // define o item antes de abrir o diálogo
+                          setDeleteDialogOpen(true);
+                        }}
                         variant="outline"
                         className="ml-2"
                       >

@@ -46,6 +46,7 @@ export interface Resource {
   name: string;
   type: string;
   capacity?: number; 
+  is_active: boolean;
 };
 
 export interface Hour {
