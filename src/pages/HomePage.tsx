@@ -1,6 +1,5 @@
 import LabCard from "@/components/labCard";
 import { WeekDaySelector } from "@/components/weekDays";
-import { useResources } from "@/hooks/use-supabase-client";
 import type { AppointmentWithRelations } from "@/types";
 import { useState } from "react";
 import { useAppointmentsContext } from "@/context/AppointmentsContext";
@@ -140,7 +139,7 @@ const { resources, loadingResources } = useAppData();
       badge: (appointmentsToShow.length > 0) ? "Reservado" : "Disponível",
     };
   });
-
+  
 
   return (
     <main className="pb-24 md:pb-4">
