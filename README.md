@@ -91,7 +91,7 @@ Para configurar e executar o projeto em seu ambiente local, siga os passos abaix
 
 ## 👨‍🎓 Contexto Acadêmico e Autor
 
-Este projeto foi desenvolvido como parte dos requisitos para a obtenção do título de [Insira o Título do Curso, ex: Bacharel em Sistemas de Informação] pela **Universidade do Estado de Minas Gerais (UEMG)**.
+Este projeto foi desenvolvido como parte dos requisitos para a obtenção do título de Bacharel em Engenharia da Computação pela **Universidade do Estado de Minas Gerais (UEMG)**.
 
 **Autor:**
 
